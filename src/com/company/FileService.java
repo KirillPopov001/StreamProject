@@ -7,30 +7,39 @@ import java.io.IOException;
 
 public class FileService {
 
-    public FileService(){
+    private static FileService instance;
+    private String b = "";
 
+    public static synchronized FileService getInstance(){
+        if (instance == null){
+            instance = new FileService();
+        }
+        return instance;
     }
 
-    public void doing(String read, String write) throws IOException {
-        FileReader filer = null;
-        FileWriter filew = null;
+    public String getB(){
+        return b;
+    }
+
+    public void doing(String write) throws IOException {
+        FileReader filew = null;
         try {
 
-            filer = new FileReader(read);
-            filew = new FileWriter(write);
+            filew = new FileReader(write);
 
 
             int a;
-            while ((a = filer.read()) != -1){
-                filew.write(a);
+            int count = 0;
+
+            while ((a = filew.read()) != -1){
+                this.b += (char)a;
             }
         }finally {
-            if (filer != null){
-                filer.close();
-            }
             if(filew != null){
                 filew.close();
             }
         }
     }
 }
+
+

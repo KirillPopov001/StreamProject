@@ -15,8 +15,6 @@ public class Account {
         setBlocked(blocked);
     }
 
-    public void register(Account account)
-
     public void setName(String name){
         this.name = name;
     }
@@ -35,6 +33,14 @@ public class Account {
 
     public void setBlocked(boolean blocked){
         this.blocked = blocked;
+    }
 
+    public String getEmail(){
+        return this.email;
+    }
+
+    @Override
+    public String toString(){
+        return this.name +", "+ this.birth +", "+ this.email +", "+ this.pass +", "+ this.blocked;
     }
 }
