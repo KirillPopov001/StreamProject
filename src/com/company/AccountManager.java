@@ -8,21 +8,29 @@ import java.util.Objects;
 
 interface AccountManager {
 
+    FailedLoginCounter count = new FailedLoginCounter();
+
     default void register(Account account) throws IOException, AccountAlreadyExistsException {
         FileService ii = new FileService();
         ii.doing("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
-        for (String bb : ii.getB().split("\n")) {
-            if (account.getEmail().equals(bb.split(", ")[2])) {
-                throw new AccountAlreadyExistsException("Аккаунт уже создан");
+        if (ii.getB().equals("")) {
+            FileWriter filew = null;
+            filew = new FileWriter("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
+            String container = ii.getB() + account + "\n";
+            filew.write(container);
+            filew.close();
+        } else {
+            for (String bb : ii.getB().split("\n")) {
+                if (account.getEmail().equals(bb.split(", ")[2])) {
+                    throw new AccountAlreadyExistsException("Аккаунт уже создан");
+                }
             }
+            FileWriter filew = null;
+            filew = new FileWriter("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
+            String container = ii.getB() + account + "\n";
+            filew.write(container);
+            filew.close();
         }
-        FileWriter filew = null;
-        filew = new FileWriter("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
-        filew.write(account.toString());
-
-
-        filew.close();
-
     }
 
 
@@ -33,32 +41,54 @@ interface AccountManager {
         Account b = new Account("", "", "", "", false);
         try {
             filew = new FileReader("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
-            BufferedReader read = new BufferedReader(filew);
 
-            int a;
-            FailedLoginCounter count = new FailedLoginCounter();
-            for(String abb; (abb = read.readLine()) != null;){
-                String[] abb1 = abb.split(", ");
-                if(Objects.equals(email, abb1[3]) & password.equals(abb1[2])& !Objects.equals(abb1[4], "true")){
-                    b = new Account( abb1[0], abb1[1],  abb1[2], abb1[3], false);
+            for (String bb : ii.getB().split("\n")) {
+                if (bb.split(", ")[2].equals(email) & "true".equals(bb.split(", ")[4])) {
+                    throw new AccountBlockedException("Не вспомнил пароль, лох");
                 }
-                if((abb1[3].equals(email) & !abb1[2].equals(password)) || (!abb1[3].equals(email) & abb1[2].equals(password))){
+                if (bb.split(", ")[2].equals(email) & !bb.split(", ")[3].equals(password)) {
+                    throw new WrongCredentialsException("Неверный пароль и/или логин");
+                }
+                if (Objects.equals(email, bb.split(", ")[2]) & password.equals(bb.split(", ")[2]) & Objects.equals(bb.split(", ")[4], "false")) {
+                    b = new Account(bb.split(", ")[0], bb.split(", ")[1], bb.split(", ")[2], bb.split(", ")[3], false);
+                }
+                if ((bb.split(", ")[3].equals(email) & !bb.split(", ")[2].equals(password)) | (!bb.split(", ")[3].equals(email) & bb.split(", ")[2].equals(password))) {
                     count.increaseCount(email);
                     throw new WrongCredentialsException("Неверный пароль и/или логин");
                 }
-                if(Objects.equals(email, abb1[3]) & password.equals(abb1[2])& !Objects.equals(abb1[4], "false")){
-                    throw new AccountBlockedException("Не вспомнил пароль, лох");
-                }
+
 
             }
-        } catch (WrongCredentialsException | AccountBlockedException e) {
+        } catch (WrongCredentialsException e) {
             System.out.println(e.getMessage());
-        } finally {
+            count.increaseCount(email);
+        } catch (AccountBlockedException e){
+            System.out.println(e.getMessage());
+        }finally {
             if (filew != null) {
                 filew.close();
             }
         }
         return b;
     }
+
+    default void removeAccount(String email, String password) throws IOException, WrongCredentialsException {
+        FileService ii = new FileService();
+        ii.doing("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
+        FileWriter filew = null;
+        filew = new FileWriter("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
+        String container = "";
+        for (String bb : ii.getB().split("\n")) {
+            if (!email.equals(bb.split(", ")[2]) | !password.equals(bb.split(", ")[3])) {
+                container += bb;
+            }
+            if (ii.getB().length() == container.length()) {
+                throw new WrongCredentialsException("Нет такого аккаунта");
+            }
+        }
+        filew.write(container);
+        filew.close();
+    }
 }
+
 

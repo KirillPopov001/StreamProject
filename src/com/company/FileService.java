@@ -34,12 +34,44 @@ public class FileService {
             while ((a = filew.read()) != -1){
                 this.b += (char)a;
             }
+            //this.b += "\n";
         }finally {
             if(filew != null){
                 filew.close();
             }
         }
     }
+
+    public void block(String email) throws IOException {
+        FileService ii = new FileService();
+        ii.doing("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
+        FileReader filer = null;
+        FileWriter filew = null;
+        try {
+            filer = new FileReader("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
+            filew = new FileWriter("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
+            String container = "";
+            for (String bb :ii.getB().split("\n")) {
+                if (email.equals(bb.split(", ")[2])){
+                    String bb1 = "";
+                    bb1 += bb.split(", ")[0] + ", ";
+                    bb1 += bb.split(", ")[1] + ", ";
+                    bb1 += bb.split(", ")[2] + ", ";
+                    bb1 += bb.split(", ")[3] + ", ";
+                    bb1 += "true" + "\n";
+                    container += bb1;
+                }
+            }
+            filew.write(container);
+
+        }finally {
+            if(filer != null) {
+                filer.close();
+            }
+            if(filew != null){
+                filew.close();
+            }
+    }}
 }
 
 
