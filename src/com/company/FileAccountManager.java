@@ -4,5 +4,4 @@ public class FileAccountManager implements AccountManager{
 
     public FileAccountManager(){
     }
-
 }

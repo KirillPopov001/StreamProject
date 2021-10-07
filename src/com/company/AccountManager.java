@@ -11,31 +11,26 @@ interface AccountManager {
     FailedLoginCounter count = new FailedLoginCounter();
 
     default void register(Account account) throws IOException, AccountAlreadyExistsException {
-        FileService ii = new FileService();
-        ii.doing("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
-        if (ii.getB().equals("")) {
-            FileWriter filew = null;
-            filew = new FileWriter("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
-            String container = ii.getB() + account + "\n";
-            filew.write(container);
-            filew.close();
-        } else {
-            for (String bb : ii.getB().split("\n")) {
-                if (account.getEmail().equals(bb.split(", ")[2])) {
-                    throw new AccountAlreadyExistsException("Аккаунт уже создан");
+        try (FileWriter filew =
+                     new FileWriter("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt")){
+            FileService ii = FileService.getInstance();
+            ii.doing("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
+            if (!ii.getB().equals("")) {
+                for (String bb : ii.getB().split("\n")) {
+                    if (account.getEmail().equals(bb.split(", ")[2])) {
+                        throw new AccountAlreadyExistsException("Аккаунт уже создан");
+                    }
                 }
             }
-            FileWriter filew = null;
-            filew = new FileWriter("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
             String container = ii.getB() + account + "\n";
             filew.write(container);
-            filew.close();
         }
+
     }
 
 
     default Account login(String email, String password) throws IOException {
-        FileService ii = new FileService();
+        FileService ii = FileService.getInstance();
         ii.doing("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
         FileReader filew = null;
         Account b = new Account("", "", "", "", false);
@@ -43,10 +38,10 @@ interface AccountManager {
             filew = new FileReader("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
 
             for (String bb : ii.getB().split("\n")) {
-                if (bb.split(", ")[2].equals(email) & "true".equals(bb.split(", ")[4])) {
+                if (bb.split(", ")[2].equals(email) && "true".equals(bb.split(", ")[4])) {
                     throw new AccountBlockedException("Не вспомнил пароль, лох");
                 }
-                if (bb.split(", ")[2].equals(email) & !bb.split(", ")[3].equals(password)) {
+                if (bb.split(", ")[2].equals(email) || !bb.split(", ")[3].equals(password)) {
                     throw new WrongCredentialsException("Неверный пароль и/или логин");
                 }
                 if (Objects.equals(email, bb.split(", ")[2]) & password.equals(bb.split(", ")[2]) & Objects.equals(bb.split(", ")[4], "false")) {
@@ -73,7 +68,7 @@ interface AccountManager {
     }
 
     default void removeAccount(String email, String password) throws IOException, WrongCredentialsException {
-        FileService ii = new FileService();
+        FileService ii = FileService.getInstance();
         ii.doing("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
         FileWriter filew = null;
         filew = new FileWriter("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");

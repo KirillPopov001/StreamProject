@@ -1,6 +1,5 @@
 package com.company;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,6 +8,10 @@ public class FileService {
 
     private static FileService instance;
     private String b = "";
+
+    private FileService(){
+
+    }
 
     public static synchronized FileService getInstance(){
         if (instance == null){

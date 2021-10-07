@@ -12,15 +12,15 @@ public class Main {
             filew = new FileReader("C:\\Users\\testk\\IdeaProjects\\StreamProject\\src\\com\\company\\Basa.txt");
             BufferedReader read = new BufferedReader(filew);
             FileAccountManager file = new FileAccountManager();
-            //file.register(acc2);
+            file.register(acc1);
             //file.removeAccount("апн8г3@mail.ru", "r7fugkjj");
             file.login("апн8рг3@mail.ru", "");
             file.login("апн8рг3@mail.ru", "");
-            file.login("апн8рг3@mail.ru", "");
+            file.login("5в57геа@mail.ru", "");
             file.login("апн8рг3@mail.ru", "");
             file.login("апн8рг3@mail.ru", "");
             file.login("апн8рг3@mail.ru", "r7fugkjj");
-        } catch (IOException e) {
+        } catch (IOException | AccountAlreadyExistsException e) {
             System.out.println(e.getMessage());
         }
     }
